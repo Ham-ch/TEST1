@@ -1,0 +1,42 @@
+#include <DHT.h>
+#include <TM1637Display.h>
+
+// 定義引腳
+#define DHTPIN 2
+#define DHTTYPE DHT11
+#define CLK 3
+#define DIO 4
+#define LED1 5
+#define LED2 6
+#define BUZZER 7
+
+// 初始化 DHT 和 TM1637
+DHT dht(DHTPIN, DHTTYPE);
+TM1637Display display(CLK, DIO);
+
+void setup() {
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+  dht.begin();
+  display.setBrightness(0x0f);
+}
+
+void loop() {
+  float temp = dht.readTemperature();
+  
+  // 顯示溫度在 TM1637
+  display.showNumberDec(temp);
+
+  if (temp >= 28) {
+    digitalWrite(LED1, HIGH);
+    digitalWrite(LED2, HIGH);
+    digitalWrite(BUZZER, HIGH);
+  } else {
+    digitalWrite(LED1, LOW);
+    digitalWrite(LED2, LOW);
+    digitalWrite(BUZZER, LOW);
+  }
+
+  delay(2000); // 延遲2秒再讀取一次溫度
+}
