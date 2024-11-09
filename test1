@@ -1,42 +1,29 @@
-#include <DHT.h>
-#include <TM1637Display.h>
+#include <HCSR04.h>
 
-// 定義引腳
-#define DHTPIN 2
-#define DHTTYPE DHT11
-#define CLK 3
-#define DIO 4
-#define LED1 5
-#define LED2 6
-#define BUZZER 7
-
-// 初始化 DHT 和 TM1637
-DHT dht(DHTPIN, DHTTYPE);
-TM1637Display display(CLK, DIO);
+UltraSonicDistanceSensor distanceSensor(11, 12);  // 初始化超音波傳感器，使用數位引腳 11 和 12
 
 void setup() {
-  pinMode(LED1, OUTPUT);
-  pinMode(LED2, OUTPUT);
-  pinMode(BUZZER, OUTPUT);
-  dht.begin();
-  display.setBrightness(0x0f);
+    Serial.begin(9600);  // 初始化序列連接以打印傳感器值
+    pinMode(10, OUTPUT);  // 設置引腳 10 為輸出，用於 LED
+    pinMode(5, OUTPUT);   // 設置引腳 5 為輸出，用於 ISD1820 播放控制
+    digitalWrite(5, HIGH); // 初始狀態為 HIGH，表示不播放
 }
 
 void loop() {
-  float temp = dht.readTemperature();
-  
-  // 顯示溫度在 TM1637
-  display.showNumberDec(temp);
+    // 每 500 毫秒進行一次測量，並打印距離（以厘米為單位）
+    int x = distanceSensor.measureDistanceCm();
+    Serial.println(x);
 
-  if (temp >= 28) {
-    digitalWrite(LED1, HIGH);
-    digitalWrite(LED2, HIGH);
-    digitalWrite(BUZZER, HIGH);
-  } else {
-    digitalWrite(LED1, LOW);
-    digitalWrite(LED2, LOW);
-    digitalWrite(BUZZER, LOW);
-  }
-
-  delay(2000); // 延遲2秒再讀取一次溫度
+    // 如果距離小於 15 公分且有效，保持 LED 亮並觸發 ISD1820 播放
+    if ((x < 15) && (x != -1)) {
+        digitalWrite(10, HIGH);  // LED 恆亮
+        digitalWrite(5, LOW);    // 將 PLAYL 引腳拉低觸發播放
+        delay(100);              // 延遲 100 毫秒，確保播放啟動
+        digitalWrite(5, HIGH);   // 將 PLAYL 引腳拉高，停止播放觸發
+        Serial.println("hit....");
+    } else {
+        digitalWrite(10, LOW);   // 確保 LED 關閉
+    }
+    
+    delay(500);  // 等待 500 毫秒再進行下一次測量
 }
