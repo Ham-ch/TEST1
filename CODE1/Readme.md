@@ -29,7 +29,7 @@
 
 ## 實作影片
 
-<a href= "https://youtube.com/shorts/32zJrRhXVW4feature=share">
+<a href= "https://www.youtube.com/shorts/32zJrRhXVW4">
 <img src= "https://i.ytimg.com/vi/32zJrRhXVW4/oar2.jpg?sqp=-oaymwEoCJUDENAFSFqQAgHyq4qpAxcIARUAAIhC2AEB4gEKCBgQAhgGOAFAAQ==&rs=AOn4CLA1kXOIQcs2IWTwRVDh0-mNiFULkA/0.jpg"></a>
 
 ## 程式碼
