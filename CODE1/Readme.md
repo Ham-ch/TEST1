@@ -34,6 +34,8 @@
 
 ## 程式碼
 
+``` arduino
+
 #include <DHT.h>
 #include <TM1637Display.h>
 #include <SoftwareSerial.h>
